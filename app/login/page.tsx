@@ -2,18 +2,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { auth } from "../utils/auth";
 import { redirect } from "next/navigation";
 import { LoginForm } from "./login-form";
-import { getUserData } from "../actions";
 
 export default async function Login() {
   const session = await auth();
   if (session?.user) {
-    const user = await getUserData(session?.user?.email as string);
-    if (user?.onboarded === true) {
       redirect("/dashboard");
-    } else {
-      redirect("/onboarding");
-    }
-  } 
+  } else {
+      redirect("/login");
+  }
 
   return (
     <>

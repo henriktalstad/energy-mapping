@@ -14,13 +14,13 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Scoped Solutions - Fakturering",
-  description: "Fakturering gjort superenkelt!",
+  title: "Scoped Solutions - Energikartlegging",
+  description: "Energikartlegging for næringsbygg",
   icons: [
     {
-      url: '/scoped_fav.png',
-      href: '/scoped_fav.png',
-      type: 'image/png',
+      url: '/fav-scoped.svg',
+      href: '/fav-scoped.svg',
+      type: 'image/svg',
       sizes: '40x40',
     },
   ],
