@@ -74,7 +74,7 @@ export function BuildingForm({ building, onSuccess }: BuildingFormProps) {
           toast.error(result.error)
         } else {
           // Handle field-specific errors
-          Object.entries(result.error).forEach(([field, errors]) => {
+          Object.entries(result.error ?? {}).forEach(([field, errors]) => {
             if (Array.isArray(errors)) {
               errors.forEach(error => form.setError(field as keyof BuildingFormValues, { message: error }))
             }
