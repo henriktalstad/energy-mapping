@@ -1,0 +1,230 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String        @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  projects      Project[]
+  buildings     Building[]
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope              String?
+  id_token           String? @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+
+model Building {
+  id           String   @id @default(cuid())
+  name         String
+  address      String
+  postalCode   String
+  city         String
+  buildingType String
+  constructionYear Int?
+  floorArea    Float?
+  
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String
+  projects     Project[]
+  energyLabels EnergyLabel[]
+  rooms        Room[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  name        String
+  description String?
+  status      ProjectStatus @default(PLANNED)
+
+  // Link to the building this project is associated with
+  building    Building? @relation(fields: [buildingId], references: [id])
+  buildingId  String?
+
+  // Link to the user who created the project
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+
+  energyLabel EnergyLabel[]
+  energyConsumptions EnergyConsumption[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model EnergyLabel {
+  id        String   @id @default(cuid())
+  label      String
+  validFrom DateTime
+  validTo   DateTime
+
+  project   Project  @relation(fields: [projectId], references: [id])
+  projectId String
+
+  building  Building @relation(fields: [buildingId], references: [id])
+  buildingId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model EnergyConsumption {
+  id             String    @id @default(cuid())
+  date           DateTime
+  amount         Float
+  energyType     EnergyType
+  unit           String
+
+  project        Project   @relation(fields: [projectId], references: [id])
+  projectId      String
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Room {
+  id           String @id @default(cuid())
+  name         String
+  area         Float
+  volume       Float
+  height       Float
+  intendedUse  String
+
+  building     Building @relation(fields: [buildingId], references: [id])
+  buildingId   String
+  buildingElements BuildingElement[]
+  technicalSystems TechnicalSystem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BuildingElement {
+  id             String           @id @default(cuid())
+  type           BuildingElementType
+  area           Float
+  uValue         Float
+  gValue         Float? // Only for windows and other transparent elements
+  orientation    String? // e.g., North, South, East, West
+  construction   String? // Description of the construction
+
+  room           Room             @relation(fields: [roomId], references: [id])
+  roomId         String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TechnicalSystem {
+  id             String           @id @default(cuid())
+  type           TechnicalSystemType
+  efficiency     Float
+  fuelType       String? // For combustion systems
+  capacity       Float?
+
+  room           Room             @relation(fields: [roomId], references: [id])
+  roomId         String
+  energySources  EnergySource[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model EnergySource {
+  id             String   @id @default(cuid())
+  type           EnergySourceType
+  amount         Float
+  unit           String
+
+  technicalSystem TechnicalSystem @relation(fields: [technicalSystemId], references: [id])
+  technicalSystemId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ProjectStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum EnergyType {
+  ELECTRICITY
+  HEATING
+  COOLING
+  OTHER
+}
+
+enum BuildingElementType {
+  WALL
+  ROOF
+  FLOOR
+  WINDOW
+  DOOR
+  OTHER
+}
+
+enum TechnicalSystemType {
+  HEATING
+  COOLING
+  VENTILATION
+  HOT_WATER
+  LIGHTING
+  OTHER
+}
+
+enum EnergySourceType {
+  ELECTRICITY
+  OIL
+  GAS
+  BIOMASS
+  SOLAR
+  WIND
+  DISTRICT_HEATING
+  DISTRICT_COOLING
+  OTHER
+}
