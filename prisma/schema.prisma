@@ -42,7 +42,8 @@ model Building {
 model Project {
   id          String        @id @default(cuid())
   name        String
-  description String?
+  floorPlan   String?
+  fascadeDrawing String?
   status      ProjectStatus @default(PLANNED)
 
   // Link to the building this project is associated with

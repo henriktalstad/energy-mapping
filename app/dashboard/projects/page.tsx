@@ -15,6 +15,9 @@ async function getProjects() {
   const projects = await prisma.project.findMany({
     orderBy: {
       createdAt: 'desc'
+    },
+    include: {
+      building: true
     }
   })
   return projects
@@ -49,8 +52,8 @@ export default async function ProjectsPage() {
           {projects.map((project) => (
             <TableRow key={project.id}>
               <TableCell className="font-medium">{project.name}</TableCell>
-              <TableCell>{project.buildingType}</TableCell>
-              <TableCell>{project.address}</TableCell>
+              <TableCell>{project.building ? project.building.buildingType : 'N/A'}</TableCell>
+              <TableCell>{project.building ? project.building.address : 'N/A'}</TableCell>
               <TableCell>{new Date(project.createdAt).toLocaleDateString('no-NO')}</TableCell>
               <TableCell>
                 <div className="flex space-x-2">
