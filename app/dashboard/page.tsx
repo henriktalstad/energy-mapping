@@ -41,8 +41,8 @@ export default async function DashboardRoute() {
       ) : (
         <Suspense fallback={<Skeleton className="w-full h-full flex-1" />}>
           <DashboardBlocks />
-          <div className="grid gap-4 lg:grid-cols-3 md:gap-8">
-            <EnergyUsageGraph className="lg:col-span-2" />
+          <div className="grid gap-4 lg:grid-cols-3 md:gap-8 md-p-8"> 
+            <EnergyUsageGraph className="lg:col-span-2 mt-10" />
             <RecentProjects projects={data} />
           </div>
         </Suspense>

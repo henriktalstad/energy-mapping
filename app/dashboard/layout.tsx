@@ -31,7 +31,7 @@ export default async function DashboardLayout({
             </div>
             <div className="flex-1 overflow-auto">
               <nav className="grid items-start px-4 text-sm font-medium space-y-2 py-4">
-                <Link href="/dashboard" className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
+                <Link href="/dashboard/buildings" className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
                   <Building className="h-5 w-5" />
                   <span>Bygninger</span>
                 </Link>
@@ -59,7 +59,8 @@ export default async function DashboardLayout({
               </SheetTrigger>
               <SheetContent side="left" className="bg-emerald-800 text-white">
                 <nav className="grid gap-4 mt-10">
-                  <Link href="/dashboard" className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
+                  <DashboardLinks />
+                  <Link href="/dashboard/buildings" className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
                     <Building className="h-5 w-5" />
                     <span>Bygninger</span>
                   </Link>
@@ -71,7 +72,6 @@ export default async function DashboardLayout({
                     <FileText className="h-5 w-5" />
                     <span>Rapporter</span>
                   </Link>
-                  <DashboardLinks />
                 </nav>
               </SheetContent>
             </Sheet>

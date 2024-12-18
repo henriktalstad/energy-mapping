@@ -10,7 +10,7 @@ interface Project {
 
 export function RecentProjects({ projects }: { projects: Project[] }) {
   return (
-    <Card>
+    <Card className="mt-10">
       <CardHeader>
         <CardTitle>Nylige prosjekter</CardTitle>
       </CardHeader>
