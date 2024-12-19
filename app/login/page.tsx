@@ -1,15 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { auth } from "../utils/auth";
-import { redirect } from "next/navigation";
 import { LoginForm } from "./login-form";
 
 export default async function Login() {
-  const session = await auth();
-  if (session?.user) {
-      redirect("/dashboard");
-  } else {
-      redirect("/login");
-  }
 
   return (
     <>
